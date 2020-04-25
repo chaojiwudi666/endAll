@@ -12,8 +12,9 @@
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "moment": "^2.24.0",
-    "mongoose": "^5.9.9",
-    "morgan": "~1.9.1"
+    "mongoose": "^5.9.10",
+    "morgan": "~1.9.1",
+    "nodemon": "^2.0.3"
   },
   "devDependencies": {
     "utility": "^1.16.3"

@@ -128,3 +128,4 @@ router.post('/saveroleinfo',function(req,res,next){
                 })
             });
     })
+    module.exports = router;

@@ -5,7 +5,7 @@ var moment = require('moment');
 var request={data:[],state:1,message:"成功",page_no:0,page_size:0,total:0};
 
 //student_info
-//保存管理员信息
+//保存学生信息
 router.post('/savestudentinfo',function(req,res,next){
     var arg=req.body;
     var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
@@ -144,3 +144,4 @@ router.post('/savestudentinfo',function(req,res,next){
             });
     })
 
+    module.exports = router;
