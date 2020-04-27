@@ -29,50 +29,31 @@ var qs=require('querystring');//解析参数的库 */
       })
   })
 }) */
-//登录
-router.post('/login', function(req, res, next) {
-    var arg=req.body;
-     var _data = { phone: arg.phone, password: utility.md5(arg.password) };
-  data.connect(function(db){
-      db.collection('admin_info').findOne(_data).toArray(function(err,docs){
-          if(err){
-            request.state=-1;
-            request.message="数据库错误";
-             res.json(request);
-          }else{
-            request.data=docs;
-              res.json(request);
-          }
-      })
-  })
-}),
-//保存管理员信息
-router.post('/saveadmininfo',function(req,res,next){
+
+//保存菜单信息
+router.post('/savemenuinfo',function(req,res,next){
 var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-var admininfosavemodel={
+var menu_infosavemodel={
     id:1,
-    name:arg.name,
-    photo:arg.photo,
-    phone:arg.phone,
+    menu_name:arg.menuname,
+    address:arg.address,
     state:1,
-    roleid:arg.role_id,
     create_time:current_time,
     update_time:current_time,
     remark:arg.remark,
-    create_user:arg.create_user,
-    password:utility.md5(arg.password)
+    create_user:arg.create_user
 };
 data.connect(function(db){
-    db.collection('admin_info').find({}).sort({_id:-1}).limit(1).toArray(function(err,docs){
+    db.collection('menu_info').find({}).sort({_id:-1}).limit(1).toArray(function(err,docs){
         if(err){
             request.state=-1;
             request.message=err;
             res.json(request);
         }else{
-            admininfosavemodel.id=docs[0].id+1;
+            menu_infosavemodel.id=docs[0].id+1;
             data.connect(function(db){
-                db.collection('admin_info').insertOne(admininfosavemodel,function(err,result){
+                db.collection('menu_info').insertOne(menu_infosavemodel,function(err,result){
                     if(err){
                         request.state=-1;
                         request.message=err;
@@ -87,14 +68,14 @@ data.connect(function(db){
 });
 });
 //分页查询
-router.post('/getadmininfo',function(req,res,next){
+router.post('/getmenuinfo',function(req,res,next){
     var arg=req.body;
-    var phone="/"+arg.phone+"/";
+    var menu_name="/"+arg.menu_name+"/";
     var pageNo=arg.pagen_no;
     var pageSize=arg.page_size;
-    var seachdata={phone:phone,state:1};
+    var seachdata={menu_name:menu_name,state:1};
     data.connect(function(db){
-            db.collection('admin_info').find().toArray(function(err,docs){
+            db.collection('menu_info').find().toArray(function(err,docs){
                 if(err){
                     request.state=-1;
                     request.message=err;
@@ -102,7 +83,7 @@ router.post('/getadmininfo',function(req,res,next){
                 }else{
                     request.total=docs.length;
                     data.connect(function(db){
-                            db.collection('admin_info').find(seachdata).sort({_id:-1}).limit(pageSize).skip((pageNo-1)*pageSize).toArray(function(err,docs2){
+                            db.collection('menu_info').find(seachdata).sort({_id:-1}).limit(pageSize).skip((pageNo-1)*pageSize).toArray(function(err,docs2){
                                 if(err){
                                     request.state=-1;
                                     request.message=err;
@@ -120,12 +101,12 @@ router.post('/getadmininfo',function(req,res,next){
         })
 });
 //获取详情
-router.post('/getadmininfobyid',function(req,res,next){
+router.post('/getmenuinfobyid',function(req,res,next){
         var arg=req.body;
         var id=arg.id;
         var seach={id:id};
         data.connect(function(db){
-            db.collection('admin_info').find(seach).toArray(function(err,docs){
+            db.collection('menu_info').find(seach).toArray(function(err,docs){
                 if(err){
                     request.data=docs;
                     res.json(request);
@@ -135,19 +116,18 @@ router.post('/getadmininfobyid',function(req,res,next){
         
 });
 //修改管理员信息
-router.post('/updateadmininfobyid',function(req,res,next){
+router.post('/updatemenuinfobyid',function(req,res,next){
         var arg=req.body;
         var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
         var update_id={id:arg.id};
         var update_data={
-            name:arg.name,
-            photo:arg.photo,
+            menu_name:arg.menu_name,
+            address:arg.address,
             remark:arg.remark,
-            password:arg.password,
             state:arg.state,
             updatetime:current_time}
         data.connect(function(db){
-            db.collection('admin_info').updateOne(update_id,update_data,function(err,result){
+            db.collection('menu_info').updateOne(update_id,update_data,function(err,result){
                 if(err){
                     request.state=-1;
                     request.message=err;
@@ -159,11 +139,11 @@ router.post('/updateadmininfobyid',function(req,res,next){
         })
 });
 //批量删除
-router.post('/deleteadmininfobyids',function(req,res,next){
+router.post('/deletemenuinfobyids',function(req,res,next){
         var arg=req.body;
         var ids=arg.ids;
         data.connect(function(db){
-            db.collection('admin_info').deleteMany({id:{$in:ids}},function(err,result){
+            db.collection('menu_info').deleteMany({id:{$in:ids}},function(err,result){
                 if(err){
                     request.state=-1;
                     request.message=err;

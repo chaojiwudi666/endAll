@@ -4,75 +4,36 @@ var router = express.Router();
 var data=require('../data');
 var moment = require('moment');
 var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
-
-/* var http=require('http');
-var url=require('url');
-var qs=require('querystring');//解析参数的库 */
-/* console.log(req.url);
-    var arg=url.parse(req.url).query;
-    var nameValue=qs.parse(arg)['phone'];
-    console.log(nameValue); */
-    /*     console.log(arg1);
-    console.log(arg1.phone); */
-/* router.get('/login', function(req, res, next) {
-    
-    var arg=url.parse(req.url,true).query;
-
-     var _data = { phone: arg.phone, password: utility.md5(arg.password) };
-  data.connect(function(db){
-      db.collection('admininfo').find(_data).toArray(function(err,docs){
-          if(err){
-             res.json(_data);
-          }else{
-              res.json(docs);
-          }
-      })
-  })
-}) */
-//登录
-router.post('/login', function(req, res, next) {
-    var arg=req.body;
-     var _data = { phone: arg.phone, password: utility.md5(arg.password) };
-  data.connect(function(db){
-      db.collection('admin_info').findOne(_data).toArray(function(err,docs){
-          if(err){
-            request.state=-1;
-            request.message="数据库错误";
-             res.json(request);
-          }else{
-            request.data=docs;
-              res.json(request);
-          }
-      })
-  })
-}),
+//dormitory_info
 //保存管理员信息
-router.post('/saveadmininfo',function(req,res,next){
+router.post('/savedormitoryinfo',function(req,res,next){
 var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
-var admininfosavemodel={
+var dormitory_infosavemodel={
     id:1,
-    name:arg.name,
-    photo:arg.photo,
-    phone:arg.phone,
+    dormitory_number:arg.dormitory_number,
+    hostel_id:arg.hostel_id,
+    floor_id:arg.floor_id,
+    layer_id:arg.layer_id,
+    resident_population:arg.resident_population,
+    sure_population:arg.sure_population,
     state:1,
-    roleid:arg.role_id,
+    whether:arg.whether,
     create_time:current_time,
     update_time:current_time,
     remark:arg.remark,
     create_user:arg.create_user,
-    password:utility.md5(arg.password)
 };
 data.connect(function(db){
-    db.collection('admin_info').find({}).sort({_id:-1}).limit(1).toArray(function(err,docs){
+    db.collection('dormitory_info').find({}).sort({_id:-1}).limit(1).toArray(function(err,docs){
         if(err){
             request.state=-1;
             request.message=err;
             res.json(request);
         }else{
-            admininfosavemodel.id=docs[0].id+1;
+            dormitory_infosavemodel.id=docs[0].id+1;
             data.connect(function(db){
-                db.collection('admin_info').insertOne(admininfosavemodel,function(err,result){
+                db.collection('dormitory_info').insertOne(dormitory_infosavemodel,function(err,result){
                     if(err){
                         request.state=-1;
                         request.message=err;
@@ -87,14 +48,14 @@ data.connect(function(db){
 });
 });
 //分页查询
-router.post('/getadmininfo',function(req,res,next){
+router.post('/getdormitoryinfo',function(req,res,next){
     var arg=req.body;
-    var phone="/"+arg.phone+"/";
+    var dormitory_number="/"+arg.dormitory_number+"/";
     var pageNo=arg.pagen_no;
     var pageSize=arg.page_size;
-    var seachdata={phone:phone,state:1};
+    var seachdata={dormitory_number:dormitory_number,state:1};
     data.connect(function(db){
-            db.collection('admin_info').find().toArray(function(err,docs){
+            db.collection('dormitory_info').find().toArray(function(err,docs){
                 if(err){
                     request.state=-1;
                     request.message=err;
@@ -102,7 +63,7 @@ router.post('/getadmininfo',function(req,res,next){
                 }else{
                     request.total=docs.length;
                     data.connect(function(db){
-                            db.collection('admin_info').find(seachdata).sort({_id:-1}).limit(pageSize).skip((pageNo-1)*pageSize).toArray(function(err,docs2){
+                            db.collection('dormitory_info').find(seachdata).sort({_id:-1}).limit(pageSize).skip((pageNo-1)*pageSize).toArray(function(err,docs2){
                                 if(err){
                                     request.state=-1;
                                     request.message=err;
@@ -120,12 +81,12 @@ router.post('/getadmininfo',function(req,res,next){
         })
 });
 //获取详情
-router.post('/getadmininfobyid',function(req,res,next){
+router.post('/getdormitoryinfobyid',function(req,res,next){
         var arg=req.body;
         var id=arg.id;
         var seach={id:id};
         data.connect(function(db){
-            db.collection('admin_info').find(seach).toArray(function(err,docs){
+            db.collection('dormitory_info').find(seach).toArray(function(err,docs){
                 if(err){
                     request.data=docs;
                     res.json(request);
@@ -135,19 +96,24 @@ router.post('/getadmininfobyid',function(req,res,next){
         
 });
 //修改管理员信息
-router.post('/updateadmininfobyid',function(req,res,next){
+router.post('/updatedormitoryinfobyid',function(req,res,next){
         var arg=req.body;
         var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
         var update_id={id:arg.id};
         var update_data={
-            name:arg.name,
-            photo:arg.photo,
-            remark:arg.remark,
-            password:arg.password,
+            dormitory_number:arg.dormitory_number,
+            hostel_id:arg.hostel_id,
+            floor_id:arg.floor_id,
+            layer_id:arg.layer_id,
+            resident_population:arg.resident_population,
+            sure_population:arg.sure_population,
             state:arg.state,
-            updatetime:current_time}
+            whether:arg.whether,
+            updatetime:current_time,
+            remark:arg.remark
+        }
         data.connect(function(db){
-            db.collection('admin_info').updateOne(update_id,update_data,function(err,result){
+            db.collection('dormitory_info').updateOne(update_id,update_data,function(err,result){
                 if(err){
                     request.state=-1;
                     request.message=err;
@@ -159,11 +125,11 @@ router.post('/updateadmininfobyid',function(req,res,next){
         })
 });
 //批量删除
-router.post('/deleteadmininfobyids',function(req,res,next){
+router.post('/deletedormitoryinfobyids',function(req,res,next){
         var arg=req.body;
         var ids=arg.ids;
         data.connect(function(db){
-            db.collection('admin_info').deleteMany({id:{$in:ids}},function(err,result){
+            db.collection('dormitory_info').deleteMany({id:{$in:ids}},function(err,result){
                 if(err){
                     request.state=-1;
                     request.message=err;
