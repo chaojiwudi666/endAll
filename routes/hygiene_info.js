@@ -19,6 +19,7 @@ var hygiene_infosavemodel={
     remark:arg.remark,
     create_user:arg.create_user,
 };
+
 data.connect(function(db){
     db.collection('hygiene_info').find({}).sort({_id:-1}).limit(1).toArray(function(err,docs){
         if(err){
