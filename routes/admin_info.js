@@ -33,15 +33,16 @@ var qs=require('querystring');//解析参数的库 */
 router.post('/login', function(req, res, next) {
     var arg=req.body;
      var _data = { phone: arg.phone, password: utility.md5(arg.password) };
+     console.log(_data);
   data.connect(function(db){
-      db.collection('admin_info').findOne(_data).toArray(function(err,docs){
+      db.collection('admin_info').find(_data).toArray(function(err,docs){
           if(err){
             request.state=-1;
             request.message="数据库错误";
              res.json(request);
           }else{
             request.data=docs;
-              res.json(request);
+              res.json(docs);
           }
       })
   })
@@ -49,6 +50,21 @@ router.post('/login', function(req, res, next) {
 //保存管理员信息
 router.post('/saveadmininfo',function(req,res,next){
 var arg=req.body;
+data.connect(function(db){
+    db.collection('admin_info').find({phone:arg.phone}).toArray(function(err,docs){
+        if(err){
+            request.state=-1;
+            request.message=err;
+            res.json(request);
+        }else{
+            if(docs){
+                request.state=-1;
+                request.message="重复账号";
+                res.json(request);
+            }
+        }
+    })
+})
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 var admininfosavemodel={
     id:1,

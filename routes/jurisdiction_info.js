@@ -5,7 +5,29 @@ var data=require('../data');
 var moment = require('moment');
 var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
 //jurisdiction_info
-//保存管理员信息
+router.post('/getjurisdictioninfobyadminid',function(req,res,next){
+    var arg=req.body;
+    data.collection(function(db){
+        db.collection('jurisdiction_info').find({admin_id:arg.admin_id}).toArray(function(err,docs){
+            if(err){
+                request.state=-1;
+            request.message=err;
+            res.json(request);
+            }else{
+                var ids=[];
+                docs.forEach(element => {
+                    ids.add(element.menu_id);
+                   
+                });
+                console.log(ids);
+            }
+        })
+    })
+
+})
+
+
+//保存管理员权限
 router.post('/savejurisdictioninfo',function(req,res,next){
 var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
