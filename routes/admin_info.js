@@ -33,16 +33,23 @@ var qs=require('querystring');//解析参数的库 */
 router.post('/login', function(req, res, next) {
     var arg=req.body;
      var _data = { phone: arg.phone, password: utility.md5(arg.password) };
-     console.log(_data);
   data.connect(function(db){
       db.collection('admin_info').find(_data).toArray(function(err,docs){
           if(err){
             request.state=-1;
-            request.message="数据库错误";
+            request.message=err;
              res.json(request);
           }else{
-            request.data=docs;
-              res.json(docs);
+              if(docs.length>0){
+                request.data=docs[0];
+              res.json(request);
+              }else{
+                request.state=-1;
+                request.message="账号或密码错误";
+                res.json(request);
+                
+              }
+            
           }
       })
   })
@@ -57,14 +64,16 @@ data.connect(function(db){
             request.message=err;
             res.json(request);
         }else{
-            if(docs){
+            if(docs.length>0){
                 request.state=-1;
                 request.message="重复账号";
-                res.json(request);
+                 res.json(request);
             }
         }
     })
-})
+    db.close();
+});
+
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 var admininfosavemodel={
     id:1,
@@ -72,7 +81,7 @@ var admininfosavemodel={
     photo:arg.photo,
     phone:arg.phone,
     state:1,
-    roleid:arg.role_id,
+    role_id:arg.role_id,
     create_time:current_time,
     update_time:current_time,
     remark:arg.remark,
@@ -86,7 +95,9 @@ data.connect(function(db){
             request.message=err;
             res.json(request);
         }else{
+           if(docs.length>0){
             admininfosavemodel.id=docs[0].id+1;
+           }
             data.connect(function(db){
                 db.collection('admin_info').insertOne(admininfosavemodel,function(err,result){
                     if(err){
@@ -109,6 +120,9 @@ router.post('/getadmininfo',function(req,res,next){
     var pageNo=arg.pagen_no;
     var pageSize=arg.page_size;
     var seachdata={phone:phone,state:1};
+    if(arg.phone==undefined){
+        seach_data={state:1};
+    }
     data.connect(function(db){
             db.collection('admin_info').find().toArray(function(err,docs){
                 if(err){

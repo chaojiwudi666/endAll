@@ -6,7 +6,7 @@ var moment = require('moment');
 var request={data:[],state:1,message:"成功",page_no:0,page_size:0,total:0};
 
 
-//保存管理员信息
+//保存角色信息
 router.post('/saveroleinfo',function(req,res,next){
     var arg=req.body;
     var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
@@ -26,7 +26,9 @@ router.post('/saveroleinfo',function(req,res,next){
                 request.message=err;
                 res.json(request);
             }else{
-                role_info_model.id=docs[0].id+1;
+                if(docs.length>0){
+                    role_info_model.id=docs[0].id+1;
+                }
                 data.connect(function(db){
                     db.collection('role_info').insertOne(role_info_model,function(err,result){
                         if(err){
@@ -34,6 +36,7 @@ router.post('/saveroleinfo',function(req,res,next){
                             request.message=err;
                             res.json(request);
                         }else{
+                            request.data=result;
                             res.json(request);
                         }
                     })
@@ -49,6 +52,9 @@ router.post('/saveroleinfo',function(req,res,next){
         var page_no=arg.page_no;
         var page_size=arg.page_size;
         var seach_data={title:title,state:1};
+        if(arg.title==undefined){
+            seach_data={state:1};
+        }
         data.connect(function(db){
                 db.collection('role_info').find().toArray(function(err,docs){
                     if(err){
@@ -66,7 +72,7 @@ router.post('/saveroleinfo',function(req,res,next){
                                     }else{
                                         request.data=docs2;
                                         request.pageSize=page_size;
-                                        request.pageNo=page_size;
+                                        request.pageNo=page_no;
                                         res.json(request);
                                     }
                                 })

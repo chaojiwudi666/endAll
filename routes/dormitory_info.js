@@ -5,7 +5,7 @@ var data=require('../data');
 var moment = require('moment');
 var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
 //dormitory_info
-//保存管理员信息
+//保存宿舍信息
 router.post('/savedormitoryinfo',function(req,res,next){
 var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
@@ -31,7 +31,9 @@ data.connect(function(db){
             request.message=err;
             res.json(request);
         }else{
+           if(docs.length>0){
             dormitory_infosavemodel.id=docs[0].id+1;
+           }
             data.connect(function(db){
                 db.collection('dormitory_info').insertOne(dormitory_infosavemodel,function(err,result){
                     if(err){
@@ -54,6 +56,9 @@ router.post('/getdormitoryinfo',function(req,res,next){
     var pageNo=arg.pagen_no;
     var pageSize=arg.page_size;
     var seachdata={dormitory_number:dormitory_number,state:1};
+    if(arg.dormitory_number==undefined){
+        seachdata={state:1};
+    }
     data.connect(function(db){
             db.collection('dormitory_info').find().toArray(function(err,docs){
                 if(err){

@@ -14,7 +14,7 @@ function connect(callback){
             client.close()
         }
     })
-}
+};
 
 module.exports={
     connect
