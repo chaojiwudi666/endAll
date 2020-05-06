@@ -14,8 +14,88 @@ function connect(callback){
             client.close()
         }
     })
+<<<<<<< HEAD
 };
+=======
+}
+function insert(collection, obj, callback){
+    MongoClient.connect(url, function (error, db) {
+        if (error == null) {
+            var database = db.db(dbName);
+            database.collection(collection).insertOne(obj, callback);
+            db.close();
+        } else {
+            console.log(error);
+        }
+    });
+}
+
+function insertMany(collection, objs, callback) {
+    MongoClient.connect(url, function (error, db) {
+        if (error == null) {
+            var database = db.db(dbName);
+            database.collection(collection).insertMany(objs, callback);
+            db.close();
+        } else {
+            console.log(error);
+        }
+    });
+}
+
+function find(collection, where, callback) {
+    MongoClient.connect(url, function (error, db) {
+        if (error == null) {
+            var database = db.db(dbName);
+            database.collection(collection).find(where).toArray(callback);
+            db.close();
+        } else {
+            console.log(error);
+        }
+    });
+}
+function findByPage(collection, where,pageNo,pageSize, callback) {
+    MongoClient.connect(url, function (error, db) {
+        if (error == null) {
+            var database = db.db(dbName);
+            database.collection(collection).find(where).sort({_id:-1}).limit(pageSize).skip((pageNo-1)*pageSize).toArray(callback);
+            db.close();
+        } else {
+            console.log(error);
+        }
+    });
+}
+
+function update(collection, where, update, callback) {
+    MongoClient.connect(url, function (error, db) {
+        if (error == null) {
+            var database = db.db(dbName);
+            database.collection(collection).updateOne(where, update, callback);
+            db.close();
+        } else {
+            console.log(error);
+        }
+    });
+}
+
+function deleteData(collection, where, callback) {
+    MongoClient.connect(url, function (error, db) {
+        if (error == null) {
+            var database = db.db(dbName);
+            database.collection(collection).deleteOne(where, callback);
+            db.close();
+        } else {
+            console.log(error);
+        }
+    });
+}
+
+>>>>>>> a45607ee7b6a8a2a450bbaacf06c8656571159ec
 
 module.exports={
-    connect
+    connect,
+    insert,
+    update,
+    find,
+    deleteData,
+    findByPage
 }

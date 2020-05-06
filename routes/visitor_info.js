@@ -13,7 +13,7 @@ var visitor_infosavemodel={
     id:1,
     name:arg.name,
     phone:arg.phone,
-    student_name:student_name,
+    student_name:arg.student_name,
     student_id:arg.student_id,
     state:1,
     create_time:current_time,
@@ -21,61 +21,102 @@ var visitor_infosavemodel={
     remark:arg.remark,
     create_user:arg.create_user,
 };
-data.connect(function(db){
-    db.collection('visitor_info').find({}).sort({_id:-1}).limit(1).toArray(function(err,docs){
+data.insert("visitor_info",visitor_infosavemodel,function(err,result){
+    if(err){
+        request.state=-1;
+        request.message=err;
+        res.json(request);
+    }else{
+        res.json(request);
+    }
+});
+// data.connect(function(db){
+//     db.collection('visitor_info').find({}).sort({_id:-1}).limit(1).toArray(function(err,docs){
+//         if(err){
+//             request.state=-1;
+//             request.message=err;
+//             res.json(request);
+//         }else{
+//             visitor_infosavemodel.id=docs[0].id+1;
+//             data.connect(function(db){
+//                 db.collection('visitor_info').insertOne(visitor_infosavemodel,function(err,result){
+//                     if(err){
+//                         request.state=-1;
+//                         request.message=err;
+//                         res.json(request);
+//                     }else{
+//                         res.json(request);
+//                     }
+//                 })
+//             });
+//         }
+//     })
+// });
+});
+//分页查询
+router.post('/getvisitorinfo',function(req,res,next){
+    var arg=req.body;``
+    console.log(arg);
+    var phone="/"+arg.phone+"/";
+    var pageNo=arg.pageNo;
+    var pageSize=arg.pageSize;
+    console.log(pageSize);
+    var seachdata={phone:phone,state:1};
+    data.find("visitor_info","",function(err,result){
         if(err){
             request.state=-1;
             request.message=err;
             res.json(request);
         }else{
-            visitor_infosavemodel.id=docs[0].id+1;
-            data.connect(function(db){
-                db.collection('visitor_info').insertOne(visitor_infosavemodel,function(err,result){
-                    if(err){
-                        request.state=-1;
-                        request.message=err;
-                        res.json(request);
-                    }else{
-                        res.json(request);
-                    }
-                })
-            });
-        }
-    })
-});
-});
-//分页查询
-router.post('/getvisitorinfo',function(req,res,next){
-    var arg=req.body;
-    var phone="/"+arg.phone+"/";
-    var pageNo=arg.pagen_no;
-    var pageSize=arg.page_size;
-    var seachdata={phone:phone,state:1};
-    data.connect(function(db){
-            db.collection('visitor_info').find().toArray(function(err,docs){
+            console.log(result);
+            
+            
+            request.total=result.length;
+            data.findByPage("visitor_info","",pageNo,pageSize,function(err,result){
                 if(err){
                     request.state=-1;
                     request.message=err;
-                  res.json(request);
+                    res.json(request);
                 }else{
-                    request.total=docs.length;
-                    data.connect(function(db){
-                            db.collection('visitor_info').find(seachdata).sort({_id:-1}).limit(pageSize).skip((pageNo-1)*pageSize).toArray(function(err,docs2){
-                                if(err){
-                                    request.state=-1;
-                                    request.message=err;
-                                     res.json(request);
-                                }else{
-                                    request.data=docs2;
-                                    request.pageSize=pageSize;
-                                    request.pageNo=pageNo;
-                                    res.json(request);
-                                }
-                            })
-                    })
+                    request.state=1;
+                    request.data = result;
+                    res.json(request);
+
                 }
-            })
-        })
+            });
+            
+            
+            
+
+
+            // request.total = res
+        }
+    });
+    // data.connect(function(db){
+    //         db.collection('visitor_info').find().toArray(function(err,docs){
+    //             if(err){
+    //                 request.state=-1;
+    //                 request.message=err;
+    //               res.json(request);
+    //             }else{
+    //                 request.total=docs.length;
+    //                 data.connect(function(db){
+    //                         db.collection('visitor_info').find(seachdata).sort({_id:-1}).limit(pageSize).skip((pageNo-1)*pageSize).toArray(function(err,docs2){
+    //                             if(err){
+    //                                 request.state=-1;
+    //                                 request.message=err;
+    //                                  res.json(request);
+    //                             }else{
+    //                                 request.data=docs2;
+    //                                 request.pageSize=pageSize;
+    //                                 request.pageNo=pageNo;
+    //                                 res.json(request);
+    //                             }
+    //                         })
+    //                 })
+    //             }
+    //         })
+    //     })
 });
 //获取详情
 router.post('/getvisitorinfobyid',function(req,res,next){

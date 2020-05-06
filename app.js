@@ -40,20 +40,20 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/api/users', usersRouter);
 
-app.use('/admininfo',admin_info_router);
-app.use('/roleinfo',role_info_router);
-app.use('/studentinfo',student_info);
+app.use('/api/admininfo',admin_info_router);
+app.use('/api/roleinfo',role_info_router);
+app.use('/api/studentinfo',student_info);
 
-app.use('/jurisdictioninfo',jurisdiction_info);
-app.use('/menuinfo',menu_info);
-app.use('/dormitoryinfo',dormitory_info);
+app.use('/api/jurisdictioninfo',jurisdiction_info);
+app.use('/api/menuinfo',menu_info);
+app.use('/api/dormitoryinfo',dormitory_info);
 
-app.use('/visitorinfo',visitor_info);
-app.use('/hygieneinfo',hygiene_info);
-app.use('/maintenanceinfo',maintenance_info);
-app.use('/electricityinfo',electricity_info);
+app.use('/api/visitorinfo',visitor_info);
+app.use('/api/hygieneinfo',hygiene_info);
+app.use('/api/maintenanceinfo',maintenance_info);
+app.use('/api/electricityinfo',electricity_info);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
