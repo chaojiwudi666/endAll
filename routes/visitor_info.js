@@ -13,7 +13,7 @@ var visitor_infosavemodel={
     id:1,
     name:arg.name,
     phone:arg.phone,
-    student_name:student_name,
+    student_name:arg.student_name,
     student_id:arg.student_id,
     state:1,
     create_time:current_time,
@@ -21,28 +21,37 @@ var visitor_infosavemodel={
     remark:arg.remark,
     create_user:arg.create_user,
 };
-data.connect(function(db){
-    db.collection('visitor_info').find({}).sort({_id:-1}).limit(1).toArray(function(err,docs){
-        if(err){
-            request.state=-1;
-            request.message=err;
-            res.json(request);
-        }else{
-            visitor_infosavemodel.id=docs[0].id+1;
-            data.connect(function(db){
-                db.collection('visitor_info').insertOne(visitor_infosavemodel,function(err,result){
-                    if(err){
-                        request.state=-1;
-                        request.message=err;
-                        res.json(request);
-                    }else{
-                        res.json(request);
-                    }
-                })
-            });
-        }
-    })
+data.insert("visitor_info",visitor_infosavemodel,function(err,result){
+    if(err){
+        request.state=-1;
+        request.message=err;
+        res.json(request);
+    }else{
+        res.json(request);
+    }
 });
+// data.connect(function(db){
+//     db.collection('visitor_info').find({}).sort({_id:-1}).limit(1).toArray(function(err,docs){
+//         if(err){
+//             request.state=-1;
+//             request.message=err;
+//             res.json(request);
+//         }else{
+//             visitor_infosavemodel.id=docs[0].id+1;
+//             data.connect(function(db){
+//                 db.collection('visitor_info').insertOne(visitor_infosavemodel,function(err,result){
+//                     if(err){
+//                         request.state=-1;
+//                         request.message=err;
+//                         res.json(request);
+//                     }else{
+//                         res.json(request);
+//                     }
+//                 })
+//             });
+//         }
+//     })
+// });
 });
 //分页查询
 router.post('/getvisitorinfo',function(req,res,next){
