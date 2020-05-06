@@ -14,9 +14,6 @@ function connect(callback){
             client.close()
         }
     })
-<<<<<<< HEAD
-};
-=======
 }
 function insert(collection, obj, callback){
     MongoClient.connect(url, function (error, db) {
@@ -89,7 +86,6 @@ function deleteData(collection, where, callback) {
     });
 }
 
->>>>>>> a45607ee7b6a8a2a450bbaacf06c8656571159ec
 
 module.exports={
     connect,
