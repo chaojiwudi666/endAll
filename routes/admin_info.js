@@ -70,6 +70,8 @@ router.post('/login', function (req, res, next) {
                 } else {
                     if (docs.length > 0) {
                         request.state = -1;
+                        request.data = docs;
+
                         request.message = {
                             name:"重复账号"
                         };
@@ -163,11 +165,18 @@ router.post('/getadmininfo', function (req, res, next) {
 //获取详情
 router.post('/getadmininfobyid', function (req, res, next) {
     var arg = req.body;
+
     var id = arg.id;
     var seach = { id: id };
     data.connect(function (db) {
         db.collection('admin_info').find(seach).toArray(function (err, docs) {
             if (err) {
+                request.state = -1;
+                request.message = err;
+                res.json(request);
+                
+            }else{
+                request.state = 1;
                 request.data = docs;
                 res.json(request);
             }
@@ -211,6 +220,7 @@ router.post('/deleteadmininfobyids', function (req, res, next) {
                 request.message = err;
                 res.json(request);
             } else {
+                request.state = 1;
                 res.json(request);
             }
         })
