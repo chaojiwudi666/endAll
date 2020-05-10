@@ -4,7 +4,7 @@ var router = express.Router();
 var data=require('../data');
 var moment = require('moment');
 var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
-//dormitory_info
+//dormitory_info  //未修改
 //保存宿舍信息
 router.post('/savedormitoryinfo',function(req,res,next){
 var newRequest = request;
@@ -128,6 +128,7 @@ router.post('/updatedormitoryinfobyid',function(req,res,next){
                     newRequest.message=err;
                   res.json(newRequest);
                 }else{
+                    newRequest.data=1;
                     res.json(newRequest);
                 }
             })

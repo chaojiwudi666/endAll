@@ -5,30 +5,6 @@ var data = require('../data');
 var moment = require('moment');
 var request = { data: [], state: 1, message: "成功", pageNo: 0, pageSize: 0, total: 0 };
 
-/* var http=require('http');
-var url=require('url');
-var qs=require('querystring');//解析参数的库 */
-/* console.log(req.url);
-    var arg=url.parse(req.url).query;
-    var nameValue=qs.parse(arg)['phone'];
-    console.log(nameValue); */
-/*     console.log(arg1);
-console.log(arg1.phone); */
-/* router.get('/login', function(req, res, next) {
-    
-    var arg=url.parse(req.url,true).query;
-
-     var _data = { phone: arg.phone, password: utility.md5(arg.password) };
-  data.connect(function(db){
-      db.collection('admininfo').find(_data).toArray(function(err,docs){
-          if(err){
-             res.json(_data);
-          }else{
-              res.json(docs);
-          }
-      })
-  })
-}) */
 //登录
 router.post('/login', function (req, res, next) {
     var newRequest = request;
@@ -133,7 +109,6 @@ router.post('/getadmininfo', function (req, res, next) {
    
     
     var newRequest = request;
-    console.log(newRequest);
     var arg = req.body;
     var phone = arg.phone;
     var pageNo = arg.page_no;
@@ -200,7 +175,6 @@ router.post('/getadmininfobyid', function (req, res, next) {
 router.post('/updateadmininfobyid', function (req, res, next) {
    
     var newRequest = request;
-    console.log(newRequest);
     var arg = req.body;
     var current_time = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
     var update_id = { id: arg.id };

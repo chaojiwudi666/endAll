@@ -4,7 +4,7 @@ var data=require('../data');
 var moment = require('moment');
 var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
 
-//hygiene_info
+//hygiene_info  //未修改
 //保存管理员信息
 router.post('/savehygieneinfo',function(req,res,next){
 var arg=req.body;

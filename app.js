@@ -43,7 +43,7 @@ app.use('/', indexRouter);
 app.use('/api/users', usersRouter);
 
 app.use('/api/admininfo',admin_info_router);
-// app.use('/api/roleinfo',role_info_router);
+app.use('/api/roleinfo',role_info_router);
 app.use('/api/studentinfo',student_info);
 
 app.use('/api/jurisdictioninfo',jurisdiction_info);
