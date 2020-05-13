@@ -7,7 +7,7 @@ var request = { data: [], state: 1, message: "成功", pageNo: 0, pageSize: 0, t
 
 //登录
 router.post('/login', function (req, res, next) {
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var _data = { phone: arg.phone, password: utility.md5(arg.password) };
     data.connect(function (db) {
@@ -38,7 +38,7 @@ router.post('/login', function (req, res, next) {
 }),
     //保存管理员信息
     router.post('/saveadmininfo', function (req, res, next) {
-        var newRequest = request;
+        var newRequest = JSON.parse(JSON.stringify(request));
         var arg = req.body;
         data.connect(function (db) {
             db.collection('admin_info').find({ phone: arg.phone }).toArray(function (err, docs) {
@@ -104,11 +104,12 @@ router.post('/login', function (req, res, next) {
 
 
     });
+  
 //分页查询
 router.post('/getadmininfo', function (req, res, next) {
    
     
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var phone = arg.phone;
     var pageNo = arg.page_no;
@@ -124,7 +125,9 @@ router.post('/getadmininfo', function (req, res, next) {
                 newRequest.message = err;
                 res.json(newRequest);
             } else {
+           
                 newRequest.total = docs.length;
+          
                 data.findByPage("admin_info", seachdata, pageNo, pageSize, function (err, docs2) {
                     if (err) {
                         newRequest.state = -1;
@@ -150,7 +153,7 @@ router.post('/getadmininfo', function (req, res, next) {
 //获取详情
 router.post('/getadmininfobyid', function (req, res, next) {
    
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
 
     var id = arg.id;
@@ -174,7 +177,7 @@ router.post('/getadmininfobyid', function (req, res, next) {
 //修改管理员信息
 router.post('/updateadmininfobyid', function (req, res, next) {
    
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var current_time = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
     var update_id = { id: arg.id };
@@ -215,7 +218,7 @@ router.post('/updateadmininfobyid', function (req, res, next) {
 });
 //批量删除
 router.post('/deleteadmininfobyids', function (req, res, next) {
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var ids = arg.ids;
     data.connect(function (db) {
