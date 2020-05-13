@@ -29,23 +29,23 @@ var qs=require('querystring');//解析参数的库 */
       })
   })
 }) */
-//登录
-router.post('/login', function(req, res, next) {
-    var arg=req.body;
-     var _data = { phone: arg.phone, password: utility.md5(arg.password) };
-  data.connect(function(db){
-      db.collection('admin_info').findOne(_data).toArray(function(err,docs){
-          if(err){
-            request.state=-1;
-            request.message="数据库错误";
-             res.json(request);
-          }else{
-            request.data=docs;
-              res.json(request);
-          }
-      })
-  })
-}),
+// //登录
+// router.post('/login', function(req, res, next) {
+//     var arg=req.body;
+//      var _data = { phone: arg.phone, password: utility.md5(arg.password) };
+//   data.connect(function(db){
+//       db.collection('admin_info').findOne(_data).toArray(function(err,docs){
+//           if(err){
+//             request.state=-1;
+//             request.message="数据库错误";
+//              res.json(request);
+//           }else{
+//             request.data=docs;
+//               res.json(request);
+//           }
+//       })
+//   })
+// }),
 //保存管理员信息
 router.post('/saveadmininfo',function(req,res,next){
 var arg=req.body;
