@@ -1,10 +1,9 @@
 var express = require('express');
-var utility=require('utility');
 var router = express.Router();
 var data=require('../data');
 var moment = require('moment');
 var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
-//dormitory_info  //未修改
+
 //保存宿舍信息
 router.post('/savedormitoryinfo',function(req,res,next){
 var newRequest = request;
@@ -42,6 +41,7 @@ data.connect(function(db){
                         newRequest.message=err;
                         res.json(newRequest);
                     }else{
+                        newRequest.state=1;
                         res.json(newRequest);
                     }
                 })
@@ -96,6 +96,10 @@ router.post('/getdormitoryinfobyid',function(req,res,next){
         data.connect(function(db){
             db.collection('dormitory_info').find(seach).toArray(function(err,docs){
                 if(err){
+                    newRequest.state=-1;
+                    newRequest.message=err;
+                    res.json(newRequest);
+                }else{
                     newRequest.data=docs;
                     res.json(newRequest);
                 }
@@ -110,7 +114,8 @@ router.post('/updatedormitoryinfobyid',function(req,res,next){
         var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
         var update_id={id:arg.id};
         var update_data={
-            dormitory_number:arg.dormitory_number,
+            $set:{
+                dormitory_number:arg.dormitory_number,
             hostel_id:arg.hostel_id,
             floor_id:arg.floor_id,
             layer_id:arg.layer_id,
@@ -120,6 +125,7 @@ router.post('/updatedormitoryinfobyid',function(req,res,next){
             whether:arg.whether,
             updatetime:current_time,
             remark:arg.remark
+            }
         }
         data.connect(function(db){
             db.collection('dormitory_info').updateOne(update_id,update_data,function(err,result){
@@ -146,6 +152,7 @@ router.post('/deletedormitoryinfobyids',function(req,res,next){
                     newRequest.message=err;
                   res.json(newRequest);
                 }else{
+                    newRequest.state=1;
                     res.json(newRequest);
                 }
             })
