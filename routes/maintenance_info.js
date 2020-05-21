@@ -3,7 +3,7 @@ var utility=require('utility');
 var router = express.Router();
 var data=require('../data');
 var moment = require('moment');
-var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
+var request={data:[],state:1,message:"成功",page_no:0,page_size:0,total:0};
 //保存管理员信息
 router.post('/savemaintenanceinfo',function(req,res,next){
     var newrequest=request;
@@ -48,9 +48,10 @@ data.connect(function(db){
 router.post('/getmaintenanceinfo',function(req,res,next){
     var newrequest=request;
     var arg=req.body;
+    var maintenanceType = arg.maintenanceType;
     var dormitory_id="/"+arg.dormitory_id+"/";
-    var pageNo=arg.pagen_no;
-    var pageSize=arg.page_size;
+    var page_no=arg.pagen_no;
+    var page_size=arg.page_size;
     var seachdata={dormitory_id:dormitory_id,state:1};
     if(arg.dormitory_id==undefined){
         seachdata={state:1};
@@ -64,15 +65,15 @@ router.post('/getmaintenanceinfo',function(req,res,next){
                 }else{
                     newrequest.total=docs.length;
                     data.connect(function(db){
-                            db.collection('maintenance_info').find(seachdata).sort({_id:-1}).limit(pageSize).skip((pageNo-1)*pageSize).toArray(function(err,docs2){
+                            db.collection('maintenance_info').find(seachdata).sort({_id:-1}).limit(page_size).skip((page_no-1)*page_size).toArray(function(err,docs2){
                                 if(err){
                                     newrequest.state=-1;
                                     newrequest.message=err;
                                      res.json(newrequest);
                                 }else{
                                     newrequest.data=docs2;
-                                    newrequest.pageSize=pageSize;
-                                    newrequest.pageNo=pageNo;
+                                    newrequest.page_size=page_size;
+                                    newrequest.page_no=page_no;
                                     res.json(newrequest);
                                 }
                             })
