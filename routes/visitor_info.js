@@ -9,7 +9,7 @@ var request = { data: [], state: 1, message: "成功", page_no: 0, page_size: 0,
 router.post('/savevisitorinfo', function (req, res, next) {
 
    
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     
     var arg = req.body;
     var current_time = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');

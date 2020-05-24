@@ -2,11 +2,11 @@ var express = require('express');
 var router = express.Router();
 var data = require('../data');
 var moment = require('moment');
-var request = { data: [], state: 1, message: "成功", pageNo: 0, pageSize: 0, total: 0 };
+var request = { data: [], state: 1, message: "成功", page_no: 0, page_size: 0, total: 0 };
 
 //保存宿舍信息
 router.post('/savedormitoryinfo', function (req, res, next) {
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var current_time = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
     var dormitory_infosavemodel = {
@@ -71,11 +71,11 @@ router.post('/savedormitoryinfo', function (req, res, next) {
 });
 //分页查询
 router.post('/getdormitoryinfo', function (req, res, next) {
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var dormitory_number = "/" + arg.dormitory_number + "/";
-    var pageNo = arg.pagen_no;
-    var pageSize = arg.page_size;
+    var page_no = arg.page_no;
+    var page_size = arg.page_size;
     var seachdata = { dormitory_number: dormitory_number, state: 1 };
     if (arg.dormitory_number == undefined) {
         seachdata = { state: 1 };
@@ -89,15 +89,15 @@ router.post('/getdormitoryinfo', function (req, res, next) {
             } else {
                 newRequest.total = docs.length;
                 data.connect(function (db) {
-                    db.collection('dormitory_info').find(seachdata).sort({ _id: -1 }).limit(pageSize).skip((pageNo - 1) * pageSize).toArray(function (err, docs2) {
+                    db.collection('dormitory_info').find(seachdata).sort({ _id: -1 }).limit(page_size).skip((page_no - 1) * page_size).toArray(function (err, docs2) {
                         if (err) {
                             newRequest.state = -1;
                             newRequest.message = err;
                             res.json(newRequest);
                         } else {
                             newRequest.data = docs2;
-                            newRequest.pageSize = pageSize;
-                            newRequest.pageNo = pageNo;
+                            newRequest.page_size = page_size;
+                            newRequest.page_no = page_no;
                             res.json(newRequest);
                         }
                     })
@@ -108,7 +108,7 @@ router.post('/getdormitoryinfo', function (req, res, next) {
 });
 //获取详情
 router.post('/getdormitoryinfobyid', function (req, res, next) {
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var id = arg.id;
     var seach = { id: id };
@@ -127,7 +127,7 @@ router.post('/getdormitoryinfobyid', function (req, res, next) {
 });
 //修改管理员信息
 router.post('/updatedormitoryinfobyid', function (req, res, next) {
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var current_time = moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
     var update_id = { id: arg.id };
@@ -160,7 +160,7 @@ router.post('/updatedormitoryinfobyid', function (req, res, next) {
 });
 //批量删除
 router.post('/deletedormitoryinfobyids', function (req, res, next) {
-    var newRequest = request;
+    var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var ids = arg.ids;
     data.connect(function (db) {
