@@ -8,7 +8,7 @@ var request={data:[],state:1,message:"成功",page_no:0,page_size:0,total:0};
 
 //保存角色信息
 router.post('/saveroleinfo',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
     var arg=req.body;
     var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
     var role_info_model={
@@ -48,7 +48,7 @@ router.post('/saveroleinfo',function(req,res,next){
     });
     //分页查询
     router.post('/getroleinfo',function(req,res,next){
-        var newrequest=request;
+        var newrequest = JSON.parse(JSON.stringify(request));
         var arg=req.body;
         var title="/"+arg.title+"/";
         var page_no=arg.page_no;
@@ -85,7 +85,7 @@ router.post('/saveroleinfo',function(req,res,next){
     });
     //获取详情
     router.post('/getroleinfobyid',function(req,res,next){
-        var newrequest=request;
+        var newrequest = JSON.parse(JSON.stringify(request));
             var arg=req.body;
             var id=arg.id;
             var seach={id:id};
@@ -106,7 +106,7 @@ router.post('/saveroleinfo',function(req,res,next){
     });
     //修改角色信息
     router.post('/updateroleinfobyid',function(req,res,next){
-        var newrequest=request;
+        var newrequest = JSON.parse(JSON.stringify(request));
             var arg=req.body;
             var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
             var update_id={id:arg.id};
@@ -131,7 +131,7 @@ router.post('/saveroleinfo',function(req,res,next){
     });
     //批量删除
     router.post('/deleteroleinfobyids',function(req,res,next){
-        var newrequest=request;
+        var newrequest = JSON.parse(JSON.stringify(request));
             var arg=req.body;
             var ids=arg.ids;
             data.connect(function(db){

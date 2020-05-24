@@ -6,7 +6,7 @@ var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
 
 //保存管理员信息
 router.post('/savehygieneinfo',function(req,res,next){
-    var newrequest=request;
+   var newrequest = JSON.parse(JSON.stringify(request));
 var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 var hygiene_infosavemodel={
@@ -46,7 +46,7 @@ data.connect(function(db){
 });
 //分页查询
 router.post('/gethygieneinfo',function(req,res,next){
-    var newrequest=request;
+   var newrequest = JSON.parse(JSON.stringify(request));
     var arg=req.body;
     var dormitory_id="/"+arg.dormitory_id+"/";
     var pageNo=arg.pagen_no;
@@ -83,7 +83,7 @@ router.post('/gethygieneinfo',function(req,res,next){
 });
 //获取详情
 router.post('/gethygieneinfobyid',function(req,res,next){
-        var newrequest=request;
+       var newrequest = JSON.parse(JSON.stringify(request));
         var arg=req.body;
         var id=arg.id;
         var seach={id:id};
@@ -102,7 +102,7 @@ router.post('/gethygieneinfobyid',function(req,res,next){
 });
 //修改管理员信息
 router.post('/updatehygieneinfobyid',function(req,res,next){
-        var newrequest=request;
+       var newrequest = JSON.parse(JSON.stringify(request));
         var arg=req.body;
         var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
         var update_id={id:arg.id};
@@ -129,7 +129,7 @@ router.post('/updatehygieneinfobyid',function(req,res,next){
 });
 //批量删除
 router.post('/deletehygieneinfobyids',function(req,res,next){
-    var newrequest=request;
+   var newrequest = JSON.parse(JSON.stringify(request));
         var arg=req.body;
         var ids=arg.ids;
         data.connect(function(db){

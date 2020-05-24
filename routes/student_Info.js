@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var data=require('../data');
 var moment = require('moment');
+var utility = require('utility');
 var request={data:[],state:1,message:"成功",page_no:0,page_size:0,total:0};
 
 //student_info
@@ -25,6 +26,7 @@ router.post('/savestudentinfo',function(req,res,next){
         dormitory_number:arg.dormitory_number,
         remark:arg.remark,
         create_user:arg.create_user,
+        password:utility.md5(arg.password)
     };
     var seach={class_id:parseInt(arg.class_id)}
     data.connect(function(db){

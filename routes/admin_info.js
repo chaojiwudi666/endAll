@@ -23,12 +23,26 @@ router.post('/login', function (req, res, next) {
                     res.json(newRequest);
 
                 } else {
-
-                    newRequest.state = -1;
-                    newRequest.message = {
-                        name:"账号或密码错误"
-                    };
-                    res.json(newRequest);
+                    data.connect(function (db) {
+                        db.collection('student_info').find(_data).toArray(function (err, docs) {
+                            if(err){
+                                newRequest.state = -1;
+                                newRequest.message = err;
+                                res.json(newRequest);
+                            }else{
+                                if(docs.length>0){
+                                    newRequest.state = 1;
+                                    newRequest.data = docs[0];
+                                     res.json(newRequest);
+                                }else{
+                                    newRequest.state = 2;
+                                    newRequest.message = "账号或密码错误";
+                                    res.json(newRequest);
+                                }
+                            }
+                        })
+                    });
+                    
                 }
             }
         })
