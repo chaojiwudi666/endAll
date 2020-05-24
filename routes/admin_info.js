@@ -27,11 +27,9 @@ router.post('/login', function (req, res, next) {
                     newRequest.state = -1;
                     newRequest.message = {
                         name:"账号或密码错误"
-                    };;
+                    };
                     res.json(newRequest);
-
                 }
-
             }
         })
     })
@@ -60,7 +58,6 @@ router.post('/login', function (req, res, next) {
                         var admininfosavemodel = {
                             id: 1,
                             name: arg.name,
-                            // photo:arg.photo,
                             phone: arg.phone,
                             state: 1,
                             role_id: parseInt(arg.role_id),

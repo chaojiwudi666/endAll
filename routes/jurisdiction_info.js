@@ -20,10 +20,7 @@ router.post('/getjurisdictioninfobyadminid',function(req,res,next){
             }
         })
     })
-
 })
-
-
 //保存管理员权限
 router.post('/savejurisdictioninfo',function(req,res,next){
     var newrequest=request;
@@ -120,7 +117,6 @@ router.post('/getjurisdictioninfobyid',function(req,res,next){
                 }
             })
         })
-        
 });
 //修改管理员信息
 router.post('/updatejurisdictioninfobyid',function(req,res,next){

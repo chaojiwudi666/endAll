@@ -102,7 +102,6 @@ router.post('/getelectricityinfobyid',function(req,res,next){
                 }
             })
         })
-        
 });
 //修改管理员信息
 router.post('/updateelectricityinfobyid',function(req,res,next){

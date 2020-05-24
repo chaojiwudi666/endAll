@@ -99,7 +99,6 @@ router.post('/gethygieneinfobyid',function(req,res,next){
                 }
             })
         })
-        
 });
 //修改管理员信息
 router.post('/updatehygieneinfobyid',function(req,res,next){

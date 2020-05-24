@@ -6,7 +6,7 @@ var moment = require('moment');
 var request={data:[],state:1,message:"成功",page_no:0,page_size:0,total:0};
 //保存管理员信息
 router.post('/savemaintenanceinfo',function(req,res,next){
-    var newrequest=request;
+var newrequest=request;
 var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 var maintenanceinfomodel={
@@ -100,7 +100,6 @@ router.post('/getmaintenanceinfobyid',function(req,res,next){
                 }
             })
         })
-        
 });
 //修改管理员信息
 router.post('/updatemaintenanceinfobyid',function(req,res,next){

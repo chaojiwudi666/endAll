@@ -38,14 +38,11 @@ router.post('/savevisitorinfo', function (req, res, next) {
 });
 //分页查询
 router.post('/getvisitorinfo', function (req, res, next) {
-  
     var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body; 
-
     var phone = arg.phone;
     var page_no = arg.page_no;
     var page_size = arg.page_size;
-
     var seachdata = { phone: phone };
     if (arg.phone == undefined) {
         seachdata = { state: 1 };
@@ -57,23 +54,18 @@ router.post('/getvisitorinfo', function (req, res, next) {
                 newRequest.message = err;
                 res.json(newRequest);
             } else {
-                
                 newRequest.total = docs.length;
-            
                 data.findByPage("visitor_info", seachdata, page_no, page_size, function (err, docs2) {
                     if (err) {
                         newRequest.state = -1;
                         newRequest.message = err;
                         res.json(newRequest);
                     } else {
-                       
                         newRequest.state = 1;
-                     
                         newRequest.data = docs2;
                         newRequest.page_size = page_size;
                         newRequest.page_no = page_no;
                         res.json(newRequest);
-                        
                     }
                 })
                 // data.connect(function(db){
@@ -98,7 +90,6 @@ router.post('/getvisitorinfobyid', function (req, res, next) {
             }
         })
     })
-
 });
 //修改管理员信息
 router.post('/updatevisitorinfobyid', function (req, res, next) {

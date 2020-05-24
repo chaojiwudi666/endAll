@@ -20,7 +20,6 @@ router.post('/savestudentinfo',function(req,res,next){
         sex:parseInt(arg.sex),
         age:arg.age,
         class_id:parseInt(arg.class_id),
-        //student_id:student_id_prefix+arg.class+"01",
         photo:arg.photo,
         phone:arg.phone,
         dormitory_number:arg.dormitory_number,
@@ -95,7 +94,6 @@ router.post('/savestudentinfo',function(req,res,next){
                                     newRequest.state=-1;
                                     newRequest.message={name:"寝室已满"};
                                     res.json(newRequest);
-                
                                 }
                             }
                         })
@@ -108,8 +106,6 @@ router.post('/savestudentinfo',function(req,res,next){
             }
         })
     });
-    
-    
     });
     //分页查询
     router.post('/getstudentinfo',function(req,res,next){
@@ -166,7 +162,6 @@ router.post('/savestudentinfo',function(req,res,next){
                     }
                 })
             })
-            
     });
     //修改角色信息
     router.post('/updatestudentinfobyid',function(req,res,next){
@@ -211,7 +206,7 @@ router.post('/savestudentinfo',function(req,res,next){
                     if(err){
                         newRequest.state=-1;
                         newRequest.message=err;
-                      res.json(newRequest);
+                        res.json(newRequest);
                     }else{
                         res.json(newRequest);
                     }

@@ -32,7 +32,6 @@ router.post('/savedormitoryinfo', function (req, res, next) {
                 newRequest.message = err;
                 res.json(newRequest);
             } else {
-                
                 if (result.length > 0) {
                     newRequest.state = -1;
                     newRequest.message = {
@@ -41,7 +40,6 @@ router.post('/savedormitoryinfo', function (req, res, next) {
                     res.json(newRequest);
                 } else {
                     data.connect(function (db) {
-
                         db.collection('dormitory_info').find({}).sort({ _id: -1 }).limit(1).toArray(function (err, docs) {
                             if (err) {
                                 newRequest.state = -1;
@@ -66,19 +64,10 @@ router.post('/savedormitoryinfo', function (req, res, next) {
                             }
                         })
                     });
-
-
-
-
                 }
-
-
             }
         })
     });
-
-
-
 });
 //分页查询
 router.post('/getdormitoryinfo', function (req, res, next) {
@@ -135,7 +124,6 @@ router.post('/getdormitoryinfobyid', function (req, res, next) {
             }
         })
     })
-
 });
 //修改管理员信息
 router.post('/updatedormitoryinfobyid', function (req, res, next) {

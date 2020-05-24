@@ -97,7 +97,6 @@ router.post('/getmenuinfobyid',function(req,res,next){
                     newrequest.state=-1;
                     newrequest.message=err;
                      res.json(newrequest);
-                   
                 }else{
                     newrequest.data=docs;
                     res.json(newrequest);
