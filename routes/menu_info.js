@@ -8,7 +8,7 @@ var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
 
 //保存菜单信息
 router.post('/savemenuinfo',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
 var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 var menu_infosavemodel={
@@ -48,7 +48,7 @@ data.connect(function(db){
 });
 //分页查询
 router.post('/getmenuinfo',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
     var arg=req.body;
     var menu_name="/"+arg.menu_name+"/";
     var pageNo=arg.page_no;
@@ -86,7 +86,7 @@ router.post('/getmenuinfo',function(req,res,next){
 });
 //获取详情
 router.post('/getmenuinfobyid',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
         var arg=req.body;
         var id=arg.id;
         console.log(arg)
@@ -107,7 +107,7 @@ router.post('/getmenuinfobyid',function(req,res,next){
 });
 //修改管理员信息
 router.post('/updatemenuinfobyid',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
         var arg=req.body;
         var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
         var update_id={id:arg.id};
@@ -131,7 +131,7 @@ router.post('/updatemenuinfobyid',function(req,res,next){
 });
 //批量删除
 router.post('/deletemenuinfobyids',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
         var arg=req.body;
         var ids=arg.ids;
         data.connect(function(db){

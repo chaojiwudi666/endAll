@@ -6,7 +6,7 @@ var moment = require('moment');
 var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
 //获取权限信息
 router.post('/getjurisdictioninfobyadminid',function(req,res,next){
-   var newrequest=request;
+   var newrequest = JSON.parse(JSON.stringify(request));
     var arg=req.body;
     data.collection(function(db){
         db.collection('jurisdiction_info').find({admin_id:arg.admin_id}).toArray(function(err,docs){
@@ -26,7 +26,7 @@ router.post('/getjurisdictioninfobyadminid',function(req,res,next){
 
 //保存管理员权限
 router.post('/savejurisdictioninfo',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
 var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 var jurisdiction_info={
@@ -66,7 +66,7 @@ data.connect(function(db){
 });
 //分页查询
 router.post('/getjurisdictioninfo',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
     var arg=req.body;
     var admin_name="/"+arg.admin_name+"/";
     var pageNo=arg.page_no;
@@ -103,7 +103,7 @@ router.post('/getjurisdictioninfo',function(req,res,next){
 });
 //获取详情
 router.post('/getjurisdictioninfobyid',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
         var arg=req.body;
         var id=arg.id;
         var seach={id:id};
@@ -124,7 +124,7 @@ router.post('/getjurisdictioninfobyid',function(req,res,next){
 });
 //修改管理员信息
 router.post('/updatejurisdictioninfobyid',function(req,res,next){
-    var newrequest=request;
+    var newrequest = JSON.parse(JSON.stringify(request));
     var arg=req.body;
         var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
         var update_id={id:arg.id};
@@ -149,7 +149,7 @@ router.post('/updatejurisdictioninfobyid',function(req,res,next){
 });
 //批量删除
 router.post('/deletejurisdictioninfobyids',function(req,res,next){
-    var newrequest=request;   
+    var newrequest = JSON.parse(JSON.stringify(request));   
     var arg=req.body;
         var ids=arg.ids;
         data.connect(function(db){
