@@ -9,16 +9,18 @@ router.post('/saveelectricityinfo',function(req,res,next){
 var newrequest = JSON.parse(JSON.stringify(request));
 var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
+var balance = (arg.current-arg.degrees_history)/0.62;
+console.log(balance);
 var electricityinfo={
     id:1,
-    dormitory_id:arg.dormitory_id,
+    dormitory_number:arg.dormitory_number,
     degrees_history:arg.degrees_history,
     current:arg.current,
     state:1,
-    price:arg.price,
+    price:0.62,
     create_time:current_time,
     update_time:current_time,
-    balance:arg.balance,
+    balance:balance.toFixed(2),
     create_user:arg.create_user,
 };
 data.connect(function(db){
@@ -50,11 +52,11 @@ data.connect(function(db){
 router.post('/getelectricityinfo',function(req,res,next){
     var newrequest = JSON.parse(JSON.stringify(request));
     var arg=req.body;
-    var dormitory_id="/"+arg.dormitory_id+"/";
+    var dormitory_number="/"+arg.dormitory_number+"/";
     var pageNo=arg.pagen_no;
     var pageSize=arg.page_size;
-    var seachdata={dormitory_id:dormitory_id,state:1};
-    if(arg.dormitory_id==undefined){
+    var seachdata={dormitory_number:dormitory_number,state:1};
+    if(arg.dormitory_number==undefined){
         seachdata={state:1};
     }
     data.connect(function(db){
@@ -111,7 +113,7 @@ router.post('/updateelectricityinfobyid',function(req,res,next){
         var update_id={id:arg.id};
         var update_data={
            $set:{
-            dormitory_id:arg.dormitory_id,
+            dormitory_number:arg.dormitory_number,
             degrees_history:arg.degrees_history,
             current:arg.current,
             state:arg.state,
