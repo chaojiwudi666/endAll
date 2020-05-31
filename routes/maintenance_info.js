@@ -72,15 +72,16 @@ router.post('/getmaintenanceinfo',function(req,res,next){
     var newrequest = JSON.parse(JSON.stringify(request));
     var arg=req.body;
  
-    var dormitory_number="/"+arg.dormitory_number+"/";
+    var dormitory_number=arg.dormitory_number;
     var page_no=arg.page_no;
   
     var page_size=arg.page_size;
-    console.log(page_no);
-    var seachdata={dormitory_number:dormitory_number,state:1};
-    if(arg.dormitory_number==undefined){
-        seachdata={state:1};
+    
+    var seachdata={dormitory_number:dormitory_number};
+    if(!arg.dormitory_number){
+        seachdata={};
     }
+    console.log(seachdata);
     data.connect(function(db){
             db.collection('maintenance_info').find().toArray(function(err,docs){
                 if(err){
@@ -136,7 +137,7 @@ router.post('/updatemaintenanceinfobyid',function(req,res,next){
            $set:{
             dormitory_number:arg.dormitory_number,
             maintenance_type:arg.maintenance_type,
-            state:arg.state,
+           
             update_time:current_time,
             remark:arg.remark,
            }}
@@ -147,6 +148,31 @@ router.post('/updatemaintenanceinfobyid',function(req,res,next){
                     newrequest.message=err;
                   res.json(newrequest);
                 }else{
+                    newrequest.state=1;
+                    res.json(newrequest);
+                }
+            })
+        })
+});
+//修改维修状态
+router.post('/updatemaintenancestatebyid',function(req,res,next){
+    var newrequest = JSON.parse(JSON.stringify(request));
+        var arg=req.body;
+     
+        var update_id={id:arg.id};
+        console.log(6666,update_id);
+        var update_data={
+           $set:{       
+            state:2,          
+           }}
+        data.connect(function(db){
+            db.collection('maintenance_info').updateOne(update_id,update_data,function(err,result){
+                if(err){
+                    newrequest.state=-1;
+                    newrequest.message=err;
+                  res.json(newrequest);
+                }else{
+                    newrequest.state=1;
                     res.json(newrequest);
                 }
             })

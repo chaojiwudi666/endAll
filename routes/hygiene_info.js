@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var data=require('../data');
 var moment = require('moment');
-var request={data:[],state:1,message:"成功",pageNo:0,pageSize:0,total:0};
+var request={data:[],state:1,message:"成功",page_no:0,page_size:0,total:0};
 
 //保存管理员信息
 router.post('/savehygieneinfo',function(req,res,next){
@@ -11,8 +11,8 @@ var arg=req.body;
 var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
 var hygiene_infosavemodel={
     id:1,
-    dormitory_id:arg.dormitory_id,
-    hygienic_condition:arg.gygienic_condition,
+    dormitory_number:arg.dormitory_number,
+    hygienic_condition:arg.hygienic_condition,
     state:1,
     create_time:current_time,
     update_time:current_time,
@@ -48,13 +48,14 @@ data.connect(function(db){
 router.post('/gethygieneinfo',function(req,res,next){
    var newrequest = JSON.parse(JSON.stringify(request));
     var arg=req.body;
-    var dormitory_id="/"+arg.dormitory_id+"/";
-    var pageNo=arg.pagen_no;
-    var pageSize=arg.page_size;
-    var seachdata={dormitory_id:dormitory_id,state:1};
-    if(arg.dormitory_id==undefined){
-         seachdata={state:1};
+    var dormitory_number=arg.dormitory_number;
+    var page_no=arg.page_no;
+    var page_size=arg.page_size;
+    var seachdata={dormitory_number:dormitory_number};
+    if(!arg.dormitory_number){
+         seachdata={};
     }
+   
     data.connect(function(db){
             db.collection('hygiene_info').find().toArray(function(err,docs){
                 if(err){
@@ -62,17 +63,22 @@ router.post('/gethygieneinfo',function(req,res,next){
                     newrequest.message=err;
                     res.json(newrequest);
                 }else{
-                    newrequest.total=docs.length;
+                    if(arg.dormitory_number){
+                        newrequest.total=1;
+                    }else{
+                        newrequest.total=docs.length;
+                    }
                     data.connect(function(db){
-                            db.collection('hygiene_info').find(seachdata).sort({_id:-1}).limit(pageSize).skip((pageNo-1)*pageSize).toArray(function(err,docs2){
+                        console.log(seachdata);
+                            db.collection('hygiene_info').find(seachdata).sort({_id:-1}).limit(page_size).skip((page_no-1)*page_size).toArray(function(err,docs2){
                                 if(err){
                                     newrequest.state=-1;
                                     newrequest.message=err;
                                      res.json(newrequest);
                                 }else{
                                     newrequest.data=docs2;
-                                    newrequest.pageSize=pageSize;
-                                    newrequest.pageNo=pageNo;
+                                    newrequest.page_size=page_size;
+                                    newrequest.page_no=page_no;
                                     res.json(newrequest);
                                 }
                             })
@@ -81,6 +87,43 @@ router.post('/gethygieneinfo',function(req,res,next){
             })
         })
 });
+//获取所有数据
+router.post('/gethygienenum',function(req,res,next){
+    var newrequest = JSON.parse(JSON.stringify(request));
+    data.connect(function(db){
+        db.collection('hygiene_info').find().toArray(function(err,docs){
+            if(err){
+                newrequest.state=-1;
+                newrequest.message=err;
+                res.json(newrequest);
+            }else{
+                var arr=[0,0,0,0,0];
+                docs.forEach(function(item,index){
+                    switch(item.hygienic_condition){
+                        case 1:arr[0]++;
+                                break;
+                        case 2:arr[1]++;
+                                break;
+                        case 3:arr[2]++;
+                                break;
+                        case 4:arr[3]++;
+                                break;
+                        case 5:arr[4]++;
+                                break;
+
+                    }
+                    
+                    
+
+                })
+                    newrequest.state=1;
+                    newrequest.total=docs.length;
+                    newrequest.data=arr;
+                    res.json(newrequest);
+            }
+        })
+    })
+})
 //获取详情
 router.post('/gethygieneinfobyid',function(req,res,next){
        var newrequest = JSON.parse(JSON.stringify(request));
@@ -106,15 +149,17 @@ router.post('/updatehygieneinfobyid',function(req,res,next){
         var arg=req.body;
         var current_time =moment(Date.now()).format('YYYY-MM-DD HH:mm:ss');
         var update_id={id:arg.id};
+       
         var update_data={
            $set:{ 
-            dormitory_id:arg.dormitory_id,
-            hygienic_condition:arg.gygienic_condition,
+            dormitory_number:arg.dormitory_number,
+            hygienic_condition:arg.hygienic_condition,
             remark:arg.remark,
             state:arg.state,
             updatetime:current_time
         }
     };
+    console.log(update_data);
         data.connect(function(db){
             db.collection('hygiene_info').updateOne(update_id,update_data,function(err,result){
                 if(err){

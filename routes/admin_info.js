@@ -10,6 +10,7 @@ router.post('/login', function (req, res, next) {
     var newRequest = JSON.parse(JSON.stringify(request));
     var arg = req.body;
     var _data = { phone: arg.phone, password: utility.md5(arg.password) };
+    var student_data = {student_id:arg.phone,password: utility.md5(arg.password)}
     data.connect(function (db) {
         db.collection('admin_info').find(_data).toArray(function (err, docs) {
             if (err) {
@@ -24,19 +25,22 @@ router.post('/login', function (req, res, next) {
 
                 } else {
                     data.connect(function (db) {
-                        db.collection('student_info').find(_data).toArray(function (err, docs) {
+                        db.collection('student_info').find(student_data).toArray(function (err, docs) {
                             if(err){
                                 newRequest.state = -1;
                                 newRequest.message = err;
                                 res.json(newRequest);
                             }else{
+                                console.log(docs);
                                 if(docs.length>0){
                                     newRequest.state = 1;
                                     newRequest.data = docs[0];
                                      res.json(newRequest);
                                 }else{
-                                    newRequest.state = 2;
-                                    newRequest.message = "账号或密码错误";
+                                    newRequest.state = -1;
+                                    newRequest.message = {
+                                        name:"账号或密码错误"
+                                    };
                                     res.json(newRequest);
                                 }
                             }
@@ -126,7 +130,7 @@ router.post('/getadmininfo', function (req, res, next) {
     var pageNo = arg.page_no;
     var pageSize = arg.page_size;
     var seachdata = { phone: phone, state: 1 };
-    if (arg.phone == undefined) {
+    if (!arg.phone) {
         seachdata = { state: 1 };
     }
     data.connect(function (db) {
@@ -137,7 +141,11 @@ router.post('/getadmininfo', function (req, res, next) {
                 res.json(newRequest);
             } else {
            
-                newRequest.total = docs.length;
+                if(arg.phone){
+                    newRequest.total=1;
+                }else{
+                    newRequest.total=docs.length;
+                }
           
                 data.findByPage("admin_info", seachdata, pageNo, pageSize, function (err, docs2) {
                     if (err) {

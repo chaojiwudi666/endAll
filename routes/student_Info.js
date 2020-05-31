@@ -21,12 +21,13 @@ router.post('/savestudentinfo',function(req,res,next){
         sex:parseInt(arg.sex),
         age:arg.age,
         class_id:parseInt(arg.class_id),
+        role_id:4,
         photo:arg.photo,
         phone:arg.phone,
         dormitory_number:arg.dormitory_number,
         remark:arg.remark,
         create_user:arg.create_user,
-        password:utility.md5(arg.password)
+        password:utility.md5("123456")
     };
     var seach={class_id:parseInt(arg.class_id)}
     data.connect(function(db){
@@ -113,11 +114,11 @@ router.post('/savestudentinfo',function(req,res,next){
     router.post('/getstudentinfo',function(req,res,next){
         var newRequest = JSON.parse(JSON.stringify(request));
         var arg=req.body;
-        var phone="/"+arg.phone+"/";
+        var student_id=arg.student_id;
         var page_no=arg.page_no;
         var page_size=arg.page_size;
-        var seach_data={phone:phone,state:1};
-        if(arg.phone==undefined){
+        var seach_data={student_id:student_id,state:1};
+        if(!arg.student_id){
             seach_data={state:1};
         }
         data.connect(function(db){
@@ -127,9 +128,13 @@ router.post('/savestudentinfo',function(req,res,next){
                         newRequest.message=err;
                       res.json(newRequest);
                     }else{
-                        newRequest.total=docs.length;
+                        if(arg.student_id){
+                            newRequest.total=1;
+                        }else{
+                            newRequest.total=docs.length;
+                        }
                         data.connect(function(db){
-                                db.collection('student_info').find().sort({_id:-1}).limit(page_size).skip((page_no-1)*page_size).toArray(function(err,docs2){
+                                db.collection('student_info').find(seach_data).sort({_id:-1}).limit(page_size).skip((page_no-1)*page_size).toArray(function(err,docs2){
                                     if(err){
                                         newRequest.state=-1;
                                         newRequest.message=err;
@@ -159,6 +164,7 @@ router.post('/savestudentinfo',function(req,res,next){
                         newRequest.message=err;
                          res.json(newRequest);
                     }else{
+                        newRequest.state=1;
                         newRequest.data=docs;
                         res.json(newRequest);
                     }
@@ -184,6 +190,30 @@ router.post('/savestudentinfo',function(req,res,next){
                 update_time:current_time
             }
                 }
+            data.connect(function(db){
+                console.log(update_data);
+                db.collection('student_info').updateOne(update_id,update_data,function(err,result){
+                    if(err){
+                        newRequest.state=-1;
+                        newRequest.message=err;
+                      res.json(newRequest);
+                    }else{
+                        newRequest.data=1;
+                        res.json(newRequest);
+                    }
+                })
+            })
+    });
+    //修改学生密码
+    router.post('/updatestudentpassword',function(req,res,next){
+        var newRequest = JSON.parse(JSON.stringify(request));
+            var arg=req.body;
+            
+            var update_id={id:arg.id};
+            var update_data={$set:{
+                password:utility.md5(arg.password)  
+            }
+            }
             data.connect(function(db){
                 console.log(update_data);
                 db.collection('student_info').updateOne(update_id,update_data,function(err,result){
